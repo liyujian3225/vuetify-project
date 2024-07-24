@@ -1,18 +1,16 @@
 <template>
-  <div>
+  <div class="fill-height overflow-hidden login-container">
     <v-img
       class="mx-auto my-6"
       max-width="228"
       src="https://cdn.vuetifyjs.com/docs/images/logos/vuetify-logo-v3-slim-text-light.svg"
     ></v-img>
-
     <v-card
-      class="mx-auto pa-12 pb-8"
+      class="mx-auto pa-12"
       elevation="8"
       max-width="448"
       rounded="lg"
     >
-
       <v-form
         v-model="form"
         @submit.prevent="onSubmit"
@@ -51,8 +49,14 @@
           @click:append-inner="visible = !visible"
         ></v-text-field>
 
+        <v-checkbox
+          v-model="autoLogin"
+          label="记住密码?"
+          density="compact"
+        ></v-checkbox>
+
         <v-card
-          class="mb-12"
+          class="mb-3"
           color="surface-variant"
           variant="tonal"
         >
@@ -88,11 +92,13 @@
   </div>
 </template>
 <script>
+import {login} from "@/api/login";
 export default {
   data: () => ({
     form: false,
     mobile: 'liyujian',
     password: '123456',
+    autoLogin: false,
     loading: false,
     visible: false,
   }),
@@ -100,11 +106,23 @@ export default {
     onSubmit () {
       if (!this.form) return
       this.loading = true
-      setTimeout(() => (this.loading = false), 2000)
+      const params = {
+        mobile: this.mobile,
+        password: this.password
+      }
+      login(params).then(res => {
+        console.log(res)
+      })
     },
     required (v) {
-      return !!v || 'Field is required'
+      return !!v || '请输入'
     },
   },
 }
 </script>
+<style lang="scss" scoped>
+  div.login-container {
+    background: url('https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/V-_oS6r-i7wAAAAAAAAAAAAAFl94AQBr');
+    background-size: 100% 100%;
+  }
+</style>
