@@ -4,6 +4,7 @@ import Vue from '@vitejs/plugin-vue'
 import Vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 import ViteFonts from 'unplugin-fonts/vite'
 import VueRouter from 'unplugin-vue-router/vite'
+import AutoImport from 'unplugin-auto-import/vite'  //日常项目中定义变量需要引入ref,reactive等等比较麻烦，可以通过unplugin-auto-import给我们自动引入
 
 // Utilities
 import { defineConfig } from 'vite'
@@ -19,6 +20,10 @@ export default defineConfig({
     VueRouter(),
     Vue({
       template: { transformAssetUrls }
+    }),
+    AutoImport({
+      imports: ['vue', 'vue-router'],
+      dts: 'src/auto-import.d.ts',
     }),
     // https://github.com/vuetifyjs/vuetify-loader/tree/master/packages/vite-plugin#readme
     Vuetify({

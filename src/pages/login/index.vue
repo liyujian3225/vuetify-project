@@ -91,49 +91,55 @@
     </v-card>
   </div>
 </template>
-<script>
+<script setup>
 import {login} from "@/api/login";
 import {setCookie, getCookie, clearCookie} from '@/utils/rememberPassword';
-export default {
-  data: () => ({
-    form: false,
-    mobile: 'liyujian',
-    password: '123456',
-    autoLogin: false,
-    loading: false,
-    visible: false,
-  }),
-  methods: {
-    onSubmit () {
-      if (!this.form) return
-      this.loading = true
-      const params = {
-        mobile: this.mobile,
-        password: this.password
-      }
-      login(params).then(res => {
-        this.loading = false;
-        const { success, content, message } = res;
+import { useUserStore } from "@/stores/user";
 
-        if(success) {
-          //记住密码控制逻辑
-          if(this.autoLogin === '1') {
-            setCookie(this.mobile, this.password, 7)
-          }else {
-            clearCookie()
-          }
-          //设置token、水印名称
-          const { name, token, id } = content;
-        }else {
-          if(message === "手机号不存在或密码错误") {}
-          if(message === "登陆设备以达到上限，请联系管理员清除不常用设备") {};
-        }
-      })
-    },
-    required (v) {
-      return !!v || '请输入'
-    },
-  },
+const form = ref(false);
+const loading = ref(false);
+const visible = ref(false);
+const mobile = ref('liyujian');
+const password = ref('123456');
+const autoLogin = ref(false);
+
+const required = (v) => {
+  return !!v || '请输入'
+}
+
+const onSubmit = () => {
+  if (!form.value) return
+  loading.value = true
+  const params = {
+    mobile: mobile.value,
+    password: password.value
+  }
+  login(params).then(res => {
+    loading.value = false;
+    const { success, content, message } = res;
+
+    if(success) {
+      //记住密码控制逻辑
+      if(autoLogin.value === '1') {
+        setCookie(mobile.value, password.value, 7)
+      }else {
+        clearCookie()
+      }
+      //设置token、水印名称
+      const { name, token, id } = content;
+      const userStore = useUserStore();
+      userStore.setToken(token);
+      //调整到课程详情页面
+      const router = useRouter();
+
+      console.log(useRouter())
+
+      router.push({ name: "courseList" })
+    }else {
+      if(message === "手机号不存在或密码错误") {}
+      if(message === "登陆设备以达到上限，请联系管理员清除不常用设备") {};
+    }
+  })
 }
 </script>
 <style lang="scss" scoped>
