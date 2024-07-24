@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { ElMessage } from 'element-plus';
 import { getItem, removeItem } from "@/utils/storage";
 import { useUserStore } from "../stores/user"
 
@@ -37,26 +36,11 @@ service.interceptors.response.use((res) => {
     // 状态码超过 2xx 范围时都会调用该函数，处理错误响应
     switch (error.response.status) {
       case 401:
-        ElMessage({
-          type: 'error',
-          message: '登陆失效！',
-          showClose: true
-        });
         userStore.logout();
         break;
       case 404:
-        ElMessage({
-          type: 'error',
-          message: '请求路径找不到！',
-          showClose: true
-        });
         break;
       case 502:
-        ElMessage({
-          type: 'error',
-          message: '服务器内部报错！',
-          showClose: true
-        });
         break;
       default:
         break;

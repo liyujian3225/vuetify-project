@@ -11,6 +11,7 @@
     "@mdi/font": "7.4.47",
     "axios": "^1.7.2",
     "core-js": "^3.37.1",
+    "pinia": "^2.1.7",
     "roboto-fontface": "*",
     "vue": "^3.4.31",
     "vuetify": "^3.6.11"

@@ -9,6 +9,10 @@ import VueRouter from 'unplugin-vue-router/vite'
 import { defineConfig } from 'vite'
 import { fileURLToPath, URL } from 'node:url'
 
+// 是否是生产环境
+const isProductionEnvironment = true;
+const baseUrl = isProductionEnvironment ? "http://www.bahasaindo.net" : "http://bahasaindo.com";
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -56,7 +60,7 @@ export default defineConfig({
     proxy: { // 本地开发环境通过代理实现跨域，生产环境使用 nginx 转发
       // 正则表达式写法
       '^/api': {
-        target: 'http://71.137.1.162:8000/api/', // 后端服务实际地址
+        target: baseUrl, // 后端服务实际地址
         changeOrigin: true, //开启代理
         rewrite: (path) => path.replace(/^\/api/, '')
       },

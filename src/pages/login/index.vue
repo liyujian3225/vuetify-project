@@ -93,6 +93,7 @@
 </template>
 <script>
 import {login} from "@/api/login";
+import {setCookie, getCookie, clearCookie} from '@/utils/rememberPassword';
 export default {
   data: () => ({
     form: false,
@@ -111,7 +112,22 @@ export default {
         password: this.password
       }
       login(params).then(res => {
-        console.log(res)
+        this.loading = false;
+        const { success, content, message } = res;
+
+        if(success) {
+          //记住密码控制逻辑
+          if(this.autoLogin === '1') {
+            setCookie(this.mobile, this.password, 7)
+          }else {
+            clearCookie()
+          }
+          //设置token、水印名称
+          const { name, token, id } = content;
+        }else {
+          if(message === "手机号不存在或密码错误") {}
+          if(message === "登陆设备以达到上限，请联系管理员清除不常用设备") {};
+        }
       })
     },
     required (v) {
